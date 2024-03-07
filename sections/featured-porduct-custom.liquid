@@ -1,0 +1,356 @@
+{{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+{{ 'section-featured-product-custom.css' | asset_url | stylesheet_tag }}
+{% assign section_id = 'FeaturedProduct-' | append: section.id %}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid 
+    assign product = section.settings.product
+-%}
+
+<style>
+  .featured-product__custom-{{ section.id }} {
+      background-color: {{ section.settings.background_color }};
+  }
+</style>
+
+{% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
+{% assign thumbs_aspect_ratio = 'aspect-ratio--' | append: section.settings.thumbs_aspect_ratio %}
+
+<section id="{{ section_id }}" class="product section-{{ section.id }}">
+  <div class="page-width section-{{ section.id }}-padding featured-product__custom-{{ section.id }}">
+    <div class="featured-product__custom featured-product__custom--{{ section.settings.media_position }} product">
+      <div class="featured-product__custom-gallery">
+        {% render 'product-gallery-custom',
+          variant_images: variant_images,
+          product: product,
+          section_id:  section.id,
+          thumbs_aspect_ratio: thumbs_aspect_ratio,
+          section: section
+        %}
+      </div>
+      <div class="featured-product__custom-product">
+        <product-info
+        id="ProductInfo-{{ section.id }}"
+        data-section="{{ section.id }}"
+        data-url="{{ product.url }}"
+      >
+        {%- assign product_form_id = 'product-form-' | append: section.id -%}
+        
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+            {%- when 'title' -%}
+              <h2 class="featured-product__custom-title {{ block.settings.heading_size }}">
+                {%- if product.title != blank -%}
+                  {{ product.title | escape }}
+                {%- else -%}
+                  {{ 'onboarding.product_title' | t }}
+                {%- endif -%}
+              </h2>
+
+            {%- when 'description' -%}
+              <div class="featured-product__custom-description {% if block.settings.text_style == 'body' %} body{% elsif block.settings.text_style == 'xl' %} xl{% endif %}" {{ block.shopify_attributes }}>
+                {%- if product.description != blank -%}
+                  {{- product.description -}}
+                {%- else -%}
+                  {{ 'onboarding.product_text' | t }}
+                {%- endif -%}
+              </div>
+
+            {%- when 'image_block' -%}
+              <div class="featured-product__custom-product-benefits" {{ block.shopify_attributes }}>
+                {%- for i in (1..5) -%}
+                  {%- assign key = 'product_benefit_' | append: i -%}
+                  {%- assign imageUrl = block.settings[key] -%}
+                  {%- if imageUrl != blank -%}
+                    <div class="featured-product__custom-product-benefits-img">
+                      <img width="100" height="100" src="{{ imageUrl | img_url: width: auto }}" alt="{{ key }}" />
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div> 
+
+              {%- when 'quantity_selector' and 'buy_buttons' -%}
+                {% assign buyButtonsBlock = section.blocks | where: "type", "buy_buttons" | first %}
+                {% assign quantitySelectorBlock = section.blocks | where: "type", "quantity_selector" | first %}
+                
+                <div class="featured-product__custom-buttons">
+                    {% render 'quantity-selector',
+                      section: section,
+                      block: quantitySelectorBlock,
+                      product: product,
+                      product_form_id: product_form_id
+                      %}   
+                  
+                    {%- render 'buy-button',
+                      block:  buyButtonsBlock,
+                      product: product,
+                      product_form_id: product_form_id,
+                      section_id: section.id
+                    -%}
+                </div>
+                
+              {%-  endcase -%}
+          
+        {%- endfor -%}
+        </product-info>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    globalFunctions.initializeProductSwipers(
+      `#${'{{ section_id}}'} .product-thumbnails-swiper`,
+      `#${'{{ section_id }}'} .product-swiper`,
+      `#${'{{ section_id }}'}`
+    );
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "t:sections.featured-product-custom.name",
+    "tag": "section",
+    "class": "section section-featured-product-custom",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "blocks": [
+      {
+        "type": "@app"
+      },
+      {
+        "type": "title",
+        "name": "t:sections.featured-product-custom.blocks.title.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "select",
+            "id": "heading_size",
+            "options": [
+              {
+                "value": "h2",
+                "label": "t:sections.all.heading_size.options__1.label"
+              },
+              {
+                "value": "h1",
+                "label": "t:sections.all.heading_size.options__2.label"
+              },
+              {
+                "value": "h0",
+                "label": "t:sections.all.heading_size.options__3.label"
+              }
+            ],
+            "default": "h1",
+            "label": "t:sections.all.heading_size.label"
+          }
+        ]
+      },
+      {
+        "type": "description",
+        "name": "t:sections.featured-product-custom.blocks.text.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "select",
+            "id": "text_style",
+            "options": [
+              {
+                "value": "body",
+                "label": "t:sections.featured-product-custom.blocks.text.settings.text_style.options__1.label"
+              },
+              {
+                "value": "xl",
+                "label": "t:sections.featured-product-custom.blocks.text.settings.text_style.options__2.label"
+              }
+            ],
+            "default": "body",
+            "label": "t:sections.featured-product-custom.blocks.text.settings.text_style.label"
+          }
+        ]
+      },
+      {
+        "type": "quantity_selector",
+        "name": "t:sections.featured-product-custom.blocks.quantity_selector.name",
+        "limit": 1
+      },
+     
+      {
+        "type": "buy_buttons",
+        "name": "t:sections.featured-product-custom.blocks.buy_buttons.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "inline_richtext",
+            "id": "free_shipping_text",
+            "default": "Text above button",
+            "label": "t:sections.featured-product-custom.blocks.buy_buttons.settings.free_shipping_text.label"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "pay_text",
+            "default": "Text under button",
+            "label": "t:sections.featured-product-custom.blocks.buy_buttons.settings.pay_text.label"
+          },
+          {
+            "type": "image_picker",
+            "id": "pay_method_icon",
+            "label": "t:sections.featured-product-custom.blocks.buy_buttons.settings.pay_icon_method.label"
+          }
+        ]
+      },
+      {
+        "type": "image_block",
+        "name": "t:sections.featured-product-custom.blocks.image_block.name",
+        "limit": 1,
+        "settings": [ 
+          {
+            "type": "image_picker",
+            "id": "product_benefit_1",
+            "label": "t:sections.featured-product-custom.blocks.image_block.benefits.benefit_1"
+          },
+          {
+            "type": "image_picker",
+            "id": "product_benefit_2",
+            "label": "t:sections.featured-product-custom.blocks.image_block.benefits.benefit_2"
+          },
+          {
+            "type": "image_picker",
+            "id": "product_benefit_3",
+            "label": "t:sections.featured-product-custom.blocks.image_block.benefits.benefit_3"
+          },
+          {
+            "type": "image_picker",
+            "id": "product_benefit_4",
+            "label": "t:sections.featured-product-custom.blocks.image_block.benefits.benefit_4"
+          },
+          {
+            "type": "image_picker",
+            "id": "product_benefit_5",
+            "label": "t:sections.featured-product-custom.blocks.image_block.benefits.benefit_5"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "product",
+        "id": "product",
+        "label": "t:sections.featured-product-custom.settings.product.label"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "default": "#FCF4EE",
+        "label": "t:sections.featured-product-custom.settings.color.background.label"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      },
+      {
+        "type": "select",
+        "id": "media_position",
+        "options": [
+          {
+            "value": "left",
+            "label": "t:sections.featured-product-custom.settings.media_position.options__1.label"
+          },
+          {
+            "value": "right",
+            "label": "t:sections.featured-product-custom.settings.media_position.options__2.label"
+          }
+        ],
+        "default": "left",
+        "label": "t:sections.featured-product-custom.settings.media_position.label",
+        "info": "t:sections.featured-product-custom.settings.media_position.info"
+      },
+      {
+        "type": "select",
+        "id": "thumbs_aspect_ratio",
+        "options": [
+          {
+            "label": "t:sections.featured-product-custom.settings.thumbs_aspect_ratio.options__1.label",
+            "value": "original"
+          },
+          {
+            "label": "t:sections.featured-product-custom.settings.thumbs_aspect_ratio.options__2.label",
+            "value": "1x1"
+          },
+          {
+            "label": "t:sections.featured-product-custom.settings.thumbs_aspect_ratio.options__3.label",
+            "value": "3x4"
+          },
+          {
+            "label": "t:sections.featured-product-custom.settings.thumbs_aspect_ratio.options__4.label",
+            "value": "4x3"
+          }
+        ],
+        "default": "1x1",
+        "label": "t:sections.featured-product-custom.settings.thumbs_aspect_ratio.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "constrain_to_viewport",
+        "default": true,
+        "label": "t:sections.featured-product-custom.settings.constrain_to_viewport.label"
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:sections.featured-product-custom.presets.name",
+        "blocks": [
+          {
+            "type": "title"
+          },
+          {
+            "type": "description"
+          },
+          {
+            "type": "buy_buttons"
+          },
+          {
+            "type": "quantity_selector"
+          },
+          {
+            "type": "image_block"
+          }
+        ]
+      }
+    ] 
+  }
+{% endschema %}
