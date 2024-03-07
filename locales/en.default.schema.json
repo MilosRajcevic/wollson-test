@@ -1003,7 +1003,9 @@
         "buy_buttons": {
           "name": "Buy buttons",
           "settings": {
-            "free_shipping_text": { "label": "Text above button" }
+            "free_shipping_text": { "label": "Text above button" },
+            "pay_text": { "label": "Text udner button" },
+            "pay_icon_method": { "label": "Pay method icon" }
           }
         }
       },
