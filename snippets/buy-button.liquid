@@ -11,7 +11,9 @@
   {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true %}
 {% endcomment %}
 <div class="featured-product__custom-buy-button-wrapper" {{ block.shopify_attributes }}>
-  <div class="featured-product__custom-free-shipping">{{ block.settings.free_shipping_text }}</div>
+  {%- if block.settings.free_shipping_text != blank -%}
+    <div class="featured-product__custom-free-shipping">{{ block.settings.free_shipping_text }}</div>
+  {%- endif -%}
   {%- if product != blank -%}
     <product-form
       class="product-form"s
@@ -102,8 +104,14 @@
       </div>
     </div>
   {%- endif -%}
+  {%- if block.settings.pay_text != blank or block.settings.pay_method_icon != blank -%}
   <div class="featured-product__custom-under-button">
-    <div class="featured-product__custom-free-shipping">{{ block.settings.pay_text }}</div>
-    <img width="59" height="14" src="{{ block.settings.pay_method_icon | img_url: width: auto }}" alt="{{ key }}" />
-  </div>
+    {%- if block.settings.pay_text != blank -%}
+      <div class="featured-product__custom-free-shipping">{{ block.settings.pay_text }}</div>
+    {%- endif -%}
+      {%- if block.settings.pay_method_icon != blank -%}
+        <img width="59" height="14" src="{{ block.settings.pay_method_icon | img_url: width: auto }}" alt="{{ key }}" />
+      {%- endif -%}
+      </div>
+    {%- endif -%}
 </div>
