@@ -91,7 +91,9 @@
         "buy_buttons_YE4abd": {
           "type": "buy_buttons",
           "settings": {
-            "free_shipping_text": "Free US Shipping over $65 | Free US Returns"
+            "free_shipping_text": "Free US Shipping over $65 | Free US Returns",
+            "pay_text": "4 interest-free installments of $18.00 with",
+            "pay_method_icon": "shopify:\/\/shop_images\/Group_538.png"
           }
         },
         "quantity_selector_6UrRVM": {
@@ -121,8 +123,6 @@
       "settings": {
         "product": "ck-jacket",
         "background_color": "#fcf4ee",
-        "padding_top": 36,
-        "padding_bottom": 36,
         "media_position": "left",
         "thumbs_aspect_ratio": "1x1",
         "constrain_to_viewport": true
