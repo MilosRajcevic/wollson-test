@@ -999,6 +999,12 @@
         },
         "image": {
           "name": "Image"
+        },
+        "buy_buttons": {
+          "name": "Buy buttons",
+          "settings": {
+            "free_shipping_text": { "label": "Text above button" }
+          }
         }
       },
       "settings": {
