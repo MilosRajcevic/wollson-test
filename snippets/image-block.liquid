@@ -1,0 +1,32 @@
+{% if image != blank %}
+    {% liquid
+      assign picture_classes = picture_classes | append: ' image-block__picture'
+      assign image_classes = image_classes | append: ' image-block__image'
+      assign sizes = sizes | default: '100vw'
+      assign widths = widths | default: '375, 550, 750, 1100, 1500, 1780, 2000, 3000'
+      assign image_mobile = image_mobile | default: image
+    %}
+    <picture class="{{ picture_classes }}">
+      <source
+        media="(max-width: 768px)"
+        srcset="
+          {{ image_mobile | image_url: width: 300 }} 1x,
+          {{ image_mobile | image_url: width: 600 }} 2x,
+        "
+      >
+      <source
+        media="(min-width: 769px)"
+        srcset="
+          {{ image | image_url: width: 1500 }} 1000w,
+          {{ image | image_url: width: 2500 }} 2000w,
+          {{ image | image_url: width: 3000 }} ,
+        "
+      >
+      {{ image | image_url: width: 3000 | image_tag: class: image_classes, sizes: sizes, widths: widths }}
+    </picture>
+  {% else %}
+    {% assign placeholder_svg = placeholder_svg | default: 'lifestyle-2' %}
+    {% assign image_classes = image_classes | append: ' image-block__image' %}
+    <div class="{{ image_classes }}">{{ placeholder_svg | placeholder_svg_tag }}</div>
+  {% endif %}
+  

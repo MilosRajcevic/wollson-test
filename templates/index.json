@@ -66,10 +66,72 @@
         "padding_top": 44,
         "padding_bottom": 36
       }
+    },
+    "featured_porduct_custom_fhjRQM": {
+      "type": "featured-porduct-custom",
+      "blocks": {
+        "judge_me_reviews_preview_badge_homepage_hn448P": {
+          "type": "shopify:\/\/apps\/judge-me-reviews\/blocks\/preview_badge_homepage\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "product": "ck-jacket"
+          }
+        },
+        "title_i34xU9": {
+          "type": "title",
+          "settings": {
+            "heading_size": "h1"
+          }
+        },
+        "description_QXe7gn": {
+          "type": "description",
+          "settings": {
+            "text_style": "body"
+          }
+        },
+        "buy_buttons_YE4abd": {
+          "type": "buy_buttons",
+          "settings": {
+            "free_shipping_text": "Free US Shipping over $65 | Free US Returns"
+          }
+        },
+        "quantity_selector_6UrRVM": {
+          "type": "quantity_selector",
+          "settings": {
+          }
+        },
+        "image_block_Ft4W37": {
+          "type": "image_block",
+          "settings": {
+            "product_benefit_1": "shopify:\/\/shop_images\/shop-icons-desk_1.png",
+            "product_benefit_2": "shopify:\/\/shop_images\/shop-icons-desk.png",
+            "product_benefit_3": "shopify:\/\/shop_images\/shop-icons-desk_3.png",
+            "product_benefit_4": "shopify:\/\/shop_images\/shop-icons-desk_2.png",
+            "product_benefit_5": "shopify:\/\/shop_images\/Group_48097565.png"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_preview_badge_homepage_hn448P",
+        "title_i34xU9",
+        "description_QXe7gn",
+        "buy_buttons_YE4abd",
+        "quantity_selector_6UrRVM",
+        "image_block_Ft4W37"
+      ],
+      "settings": {
+        "product": "ck-jacket",
+        "background_color": "#fcf4ee",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "media_position": "left",
+        "thumbs_aspect_ratio": "1x1",
+        "constrain_to_viewport": true
+      }
     }
   },
   "order": [
     "image_banner",
-    "featured_collection"
+    "featured_collection",
+    "featured_porduct_custom_fhjRQM"
   ]
 }
