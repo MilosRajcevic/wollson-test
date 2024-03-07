@@ -21,13 +21,7 @@
     assign media_count = media_count | minus: variant_images.size | plus: 1
   endif
 
-  if section.settings.media_size == 'large'
-    assign media_width = 0.65
-  elsif section.settings.media_size == 'medium'
-    assign media_width = 0.55
-  elsif section.settings.media_size == 'small'
-    assign media_width = 0.45
-  endif
+  assign media_width = 0.65
 
   assign id_append = ''
   if is_duplicate
